@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta name="author" content="Ian Kim">
+    <title>{{ title }}</title>
+    <!-- Bootstrap core CSS --> 
+    <link href="{{url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+    {%block head%}{%endblock%}
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{{url_for('index')}}">SoundDB</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+          <a class="nav-link" href="{{url_for("index")}}">Home<span class="sr-only">(current)</span></a>
+      </li>
+       <li class="nav-item active">
+          <a class="nav-link" href="{{url_for("show_select")}}">Shows<span class="sr-only">(current)</span></a>
+      </li> <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Categories
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{{url_for('category', cat="General")}}">General</a>
+            <a class="dropdown-item" href="{{url_for('category', cat="Bollywood")}}">Bollywood</a>
+        </div>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0" method="GET" action="/search">
+      <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+    <div class="container">
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <h1>{{header}}</h1>
+        </div>
+
+        <div id="sl"></br>
+        {% block body %}
+        {% endblock %}
+        </div>
+    </div>
+
+    </div>
+    <script src="{{url_for('static', filename="vendor/jquery/jquery.min.js")}}"></script>
+     <script src="{{url_for('static', filename="vendor/bootstrap/js/bootstrap.bundle.min.js")}}"></script>
+     {% block script %}
+     {% endblock %}
+</div>
+</body>
+
+</html>

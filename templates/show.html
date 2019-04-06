@@ -1,0 +1,60 @@
+{% extends "templates.html" %}
+{% block head %}
+<style>.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+#sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    background: #7386D5;
+    color: #fff;
+    transition: all 0.3s;
+}</style>
+
+<!-- Our Custom CSS -->
+<link rel="stylesheet" href="style2.css">
+<!-- Scrollbar Custom CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+{% endblock %}
+{% block body %}
+
+
+
+
+				    {% for item in showSongList%} 
+					<div class=" portfolio-item" id="{{item.id}}">
+					  <div class="card h-100">
+					    <div class="card-body">
+					      <h4 class="card-title">
+					        <p>{{item.name}}</p>
+					      </h4>
+					      <p>Genre: {{item.genre}}</p>
+                            <p>Cue: {{item.page}}.{{item.cue}}</p>
+                            <p>Trigger: {{item.trigger}}</p>
+					      <div align="right">
+                              <a type="button" class="btn btn-danger" href="{{url_for("delete_song", show_id=item.id)}}">Delete</a>
+			                  <a type="button" class="btn btn-success" id="saveButton", href="">edit</a>
+			               </div>
+					    </div>
+					  </div>
+					</div>
+					{% endfor %}
+					
+			  </div>
+
+
+					
+
+
+
+
+{% endblock %}
+
+

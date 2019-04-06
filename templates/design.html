@@ -1,61 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "templates.html" %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="description" content="Simple interface to make some music using a raspberry pi">
-    <meta name="author" content="Robert Filter">
-    <link rel="icon" href="">
-    <title>{{ title }}</title>
-    <!-- Bootstrap core CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-</head>
-
-<body>
-    <div class="container-fluid">
-        <div class="jumbotron">
-            <h1>Playlist</h1>
+{% block body %}
+{% for entry in entries %}
+<div class="well">
+    <h2>{{ entry.name }}</h2>
+    <div class="row">
+        <div class="col-md-3">
+            <div></div>
         </div>
-
-        <div id="sl">
-            {% for entry in entries %}
-            <div class="well">
-                <h2>{{ entry.name }}</h2>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div></div>
-                    </div>
-                    <div class="col-md-3">
-                        <div>Genre:
-                            <b>{{ entry.genre }}</b>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div>Rating:
-                            <b>{{ entry.rating }}</b>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="pull-right">
-                            <audio controls>
-                                <source src="http://localhost:5000/{{ entry.id }}" type="audio/mp3">
-                            </audio>
-                        </div>
-                    </div>
-                </div>
-
+        <div class="col-md-3">
+            <div>Genre:
+                <b>{{ entry.genre }}</b>
             </div>
-            {% else %}
-            <li>
-                <em>Unbelievable. No entries so far</em>
-                {% endfor %}
+        </div>
+        <div class="col-md-3">
+            <div>Rating:
+                <b>{{ entry.rating }}</b>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="pull-right">
+                <audio controls>
+                    <source src="/{{entry.id}}">
+                </audio>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{entry.id}}">
+  Add to Show
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal{{entry.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Add to Show</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+
+          <div class="modal-body">
+            Show Name
+            <input class="form-control" type="Text" id="show{{entry.id}}">
+            Trigger
+            <input class="form-control" type="Text" id="trigger{{entry.id}}">
+            Page Number
+            <input class="form-control" type="number" min="0" step="1" id="page{{entry.id}}">
+            Cue Number
+            <input class="form-control" type="number" min="0" step="1" id="cue{{entry.id}}">
+
+            <p id="status{{entry.id}}"></p>
+            
+          </form>
+          </div>
+          <div class="modal-footer">
+              <a type="button" class="btn btn-primary" id="addButton{{entry.id}}">Add to Show</a> 
+
+
+          </div>
+
+            
+        </div>
+      </div>
+    </div>
+</div>
         </div>
     </div>
 
-    </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-</body>
-
-</html>
+</div>
+{% else %}
+<li>
+    <em>Unbelievable. No entries so far</em>
+    {% endfor %}
+    {% endblock %}
+{% block script%}
+{% for entry in entries %}
+      <script>
+              $("#addButton{{entry.id}}").click(function(){
+                console.log("clicked!!");
+                $.ajax({
+                    url: "{{url_for("add_to_show_ajax")}}",
+                    type: 'GET',
+                    data: {
+                        'song': '{{entry.id}}',
+                        'show': $("#show{{entry.id}}").val(),
+                        'page': $("#page{{entry.id}}").val(),
+                        'cue' : $("#cue{{entry.id}}").val(),
+                        'trigger': $('#trigger{{entry.id}}').val()
+                    },
+                    success : function(data){
+                        $("#status{{entry.id}}").html(data) 
+                    },
+                    error : function(request, error){
+                        $("#status{{entry.id}}").html("Error, Not added")
+                    }
+                });
+            });
+    
+    </script>
+            
+    {% endfor %}
+{% endblock %}
